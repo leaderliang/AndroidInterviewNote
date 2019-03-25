@@ -2,8 +2,232 @@
 ### GC 回收，原理？
 xxx
 
+### String 相关问题整理
+
+#### 如何比较两个字符串？使用“==”还是equals()方法？
+“==” 测试的是两个对象的引用是否相同；<br>
+equals()比较的是两个字符串的值是否相等。
+除非你想检查的是两个字符串是否是同一个对象，否则你应该使用equals()来比较字符串。
+
+#### String 相关待整理...
+
+
 ### Java的强、软、弱、虚四种引用的区别?
-强引用：代码中普遍存在的，只要强引用还存在，垃圾收集器就不会回收掉被引用的对象。
-软引用：SoftReference，用来描述还有用但是非必须的对象，当内存不足的时候回收这类对象。
-弱引用：WeakReference，用来描述非必须对象，弱引用的对象只能生存到下一次 GC 发生时，当 GC 发生时，无论内存是否足够，都会回收该对象。
-虚引用：PhantomReference，一个对象是否有虚引用的存在，完全不会对其生存时间产生影响，可通过判断引用队列是否加入虚引用来回收对象。
+强引用：代码中普遍存在的，只要强引用还存在，垃圾收集器就不会回收掉被引用的对象。<br>
+软引用：SoftReference，用来描述还有用但是非必须的对象，当内存不足的时候回收这类对象。<br>
+弱引用：WeakReference，用来描述非必须对象，弱引用的对象只能生存到下一次 GC 发生时，当 GC 发生时，无论内存是否足够，都会回收该对象。<br>
+虚引用：PhantomReference，一个对象是否有虚引用的存在，完全不会对其生存时间产生影响，可通过判断引用队列是否加入虚引用来回收对象。<br>
+
+### final 和 finally 和 finalize 的区别？
+final修饰符(关键字)
+类被声明为final，它不能派生出新的子类，不能作为父类被继承；
+方法被声明为final，只能使用，不能重写；
+变量声明为final，在使用过程中不会改变，只能读取不可修改。
+
+finally(用于异常处理)
+一般用于异常处理中，finally是对异常处理的补充，finally结构使代码总会执行，不管有无异常发生。使用finally可以维护对象的内部状态，并可以清理资源
+
+finalize(用于垃圾回收)
+Object中定义的方法，使用finalize()方法在垃圾收集器将对象从内存中回收之前做必要的清理工作
+
+### Java静态代理和动态代理
+为某个对象提供一个代理，以控制对这个对象的访问
+静态代理：程序运行前就已经存在代理类的字节码文件，代理类和委托类的关系在运行前就已经确定
+动态代理：程序运行期时由 JVM 动态的生成，代理类和委托类的关系是在运行时确定。
+使用场景：如果需要对多个类进行代理，并且代理的功能都是一样的，用静态代理重复编写代理类就非常的麻烦，可以用动态代理动态的生成代理类。RxJava 里就有使用动态代理。
+
+### Java堆内存和栈内存
+
+**堆内存** 
+
+是用于存储 Java 中的对象和数组，当我们 new 一个对象或者创建一个数组的时候，就会在堆内存中开辟一段空间给他，用于存放。
+堆内存的特点是先进先出，后进后出，堆是在运行时动态的分配内存大小，缺点是存取速度较慢。
+
+**栈内存** 
+
+是用来执行程序用的，存放基本类型的变量和对象的引用变量，栈内存的特点是先进后出，后进先出，栈内存存取速度比堆要快，栈数据可以共享，缺点是存在栈中的数据大小与生存期必须是确定的，缺乏灵活性。
+
+### [遍历 Map 对象的四种方式？](https://blog.csdn.net/tjcyjd/article/details/11111401 )
+既然java中的所有map都实现了Map接口，以下方法适用于任何map实现（HashMap, TreeMap, LinkedHashMap, Hashtable, 等等）
+
+**在for-each循环中使用entries来遍历**
+这是最常见的并且在大多数情况下也是最可取的遍历方式。在键值都需要时使用。
+
+```
+Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+}
+```
+
+注意：for-each循环在java 5中被引入所以该方法只能应用于java 5或更高的版本中。如果你遍历的是一个空的map对象，for-each循环将抛出NullPointerException，因此在遍历前你总是应该检查空引用。
+
+**在for-each循环中遍历keys或values**
+如果只需要 map 中的键或者值，你可以通过 keySet 或 values 来实现遍历，而不是用 entrySet。
+
+该方法比entrySet遍历在性能上稍好（快了10%），而且代码更加干净
+
+```
+Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+ 
+//遍历map中的键
+for (Integer key : map.keySet()) {
+    System.out.println("Key = " + key); 
+}
+ 
+//遍历map中的值
+for (Integer value : map.values()) {
+    System.out.println("Value = " + value); 
+}
+```
+
+#### 使用Iterator遍历
+使用泛型：
+
+```
+Map<Integer, Integer> map = new HashMap<Integer, Integer>(); 
+Iterator<Map.Entry<Integer, Integer>> entries = map.entrySet().iterator(); 
+while (entries.hasNext()) { 
+    Map.Entry<Integer, Integer> entry = entries.next(); 
+    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue()); 
+}
+```
+
+
+不使用泛型：
+
+```
+Map map = new HashMap();
+Iterator entries = map.entrySet().iterator(); 
+while (entries.hasNext()) {
+    Map.Entry entry = (Map.Entry) entries.next(); 
+    Integer key = (Integer)entry.getKey(); 
+    Integer value = (Integer)entry.getValue(); 
+    System.out.println("Key = " + key + ", Value = " + value);
+}
+```
+
+你也可以在keySet和values上应用同样的方法。
+
+该种方式看起来冗余却有其优点所在。首先，在老版本java中这是惟一遍历map的方式。另一个好处是，你可以在遍历时调用iterator.remove()来删除entries，另两个方法则不能。根据javadoc的说明，如果在for-each遍历中尝试使用此方法，结果是不可预测的。
+
+从性能方面看，该方法类同于 for-each 遍历（即方法二）的性能。
+
+#### 通过键找值遍历（效率低）
+```
+Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+for (Integer key : map.keySet()) {
+    Integer value = map.get(key);
+    System.out.println("Key = " + key + ", Value = " + value);
+}
+```
+
+作为方法一的替代，这个代码看上去更加干净；但实际上它相当慢且无效率。因为从键取值是耗时的操作（与方法一相比，在不同的Map实现中该方法慢了20%~200%）。如果你安装了FindBugs，它会做出检查并警告你关于哪些是低效率的遍历。所以尽量避免使用。
+
+#### 总结
+
+如果仅需要键(keys)或值(values)使用方法二。如果你使用的语言版本低于java 5，或是打算在遍历时删除entries，必须使用方法三。否则使用方法一(键值都要)。
+
+<br>
+
+### list 与 Set、Map区别及适用场景
+List,Set都是继承自 Collection 接口，Map则不是
+
+List特点：元素有放入顺序，元素可重复；list支持for循环，也就是通过下标来遍历，也可以用迭代器；<br>
+Set特点：元素无放入顺序，元素不可重复，重复元素会覆盖掉，（注意：元素虽然无放入顺序，但是元素在set中的位置是有该元素的HashCode决定的，其位置其实是固定的，加入Set 的 Object必须定义equals()方法 ，set 只能用迭代，因为他无序，无法用下标来取得想要的值。） 
+
+Set 和 List 对比： <br>
+Set：检索元素效率低下，删除和插入效率高，插入和删除不会引起元素位置改变。 <br>
+List：和数组类似，List可以动态增长，查找元素效率高，插入删除元素效率低，因为会引起其他元素位置改变。 
+
+Map 适合储存键值对的数据
+
+线程安全集合类与非线程安全集合类 
+LinkedList、ArrayList、HashSet 是非线程安全的，Vector 是线程安全的;<br>
+HashMap 是非线程安全的，HashTable 是线程安全的;<br>
+StringBuilder 是非线程安全的，StringBuffer 是线程安全的。
+
+
+### ArrayList 与 LinkedList 的区别和适用场景
+
+#### Arraylist：
+优点：ArrayList 是实现了基于动态数组的数据结构,因为地址连续，一旦数据存储好了，查询操作效率会比较高（在内存里是连着放的）。<br>
+缺点：因为地址连续， ArrayList 要移动数据,所以插入和删除操作效率比较低。
+
+#### LinkedList：
+优点：LinkedList基于链表的数据结构,地址是任意的，所以在开辟内存空间的时候不需要等一个连续的地址，对于新增和删除操作 add、remove，LinedList比较占优势。LinkedList 适用于 头尾操作 或 插入指定位置 的场景。<br>
+缺点：因为LinkedList要移动指针,所以查询操作性能比较低。
+
+适用场景分析：<br>
+当需要对数据进行对此访问的情况下选用ArrayList；<br>当需要对数据进行多次增加删除修改时采用LinkedList。
+
+
+### HashMap 和 Hashtable 的区别
+> 原文链接： Javarevisited 翻译： [ImportNew.com - 唐小娟](http://www.importnew.com/author/tangxiaojuan)<br>
+译文链接： http://www.importnew.com/7010.html
+
+这篇文章中，我们不仅将会看到HashMap和Hashtable的区别，还将看到它们之间的相似之处。
+
+HashMap和Hashtable的区别
+
+HashMap 和 Hashtable 都实现了 Map 接口，但决定用哪一个之前先要弄清楚它们之间的分别。主要的区别有：线程安全性，同步(synchronization)，以及速度。
+
+HashMap几乎可以等价于Hashtable，除了HashMap是非synchronized的，并可以接受null(HashMap可以接受为null的键值(key)和值(value)，而Hashtable则不行)。
+
+HashMap是非synchronized，而Hashtable是synchronized，这意味着Hashtable是线程安全的，多个线程可以共享一个Hashtable；而如果没有正确的同步的话，多个线程是不能共享HashMap的。Java 5提供了ConcurrentHashMap，它是HashTable的替代，比HashTable的扩展性更好。
+
+另一个区别是HashMap的迭代器(Iterator)是fail-fast迭代器，而Hashtable的enumerator迭代器不是fail-fast的。所以当有其它线程改变了HashMap的结构（增加或者移除元素），将会抛出ConcurrentModificationException，但迭代器本身的remove()方法移除元素则不会抛出ConcurrentModificationException异常。但这并不是一个一定发生的行为，要看JVM。这条同样也是Enumeration和Iterator的区别。
+
+由于Hashtable是线程安全的也是synchronized，所以在单线程环境下它比HashMap要慢。如果你不需要同步，只需要单一线程，那么使用HashMap性能要好过Hashtable。
+
+HashMap不能保证随着时间的推移Map中的元素次序是不变的。
+
+要注意的一些重要术语：
+
+- sychronized意味着在一次仅有一个线程能够更改Hashtable。就是说任何线程要更新Hashtable时要首先获得同步锁，其它线程要等到同步锁被释放之后才能再次获得同步锁更新Hashtable。
+
+- Fail-safe和iterator迭代器相关。如果某个集合对象创建了Iterator或者ListIterator，然后其它的线程试图“结构上”更改集合对象，将会抛出ConcurrentModificationException异常。但其它线程可以通过set()方法更改集合对象是允许的，因为这并没有从“结构上”更改集合。但是假如已经从结构上进行了更改，再调用set()方法，将会抛出IllegalArgumentException异常。
+
+- 结构上的更改指的是删除或者插入一个元素，这样会影响到map的结构。
+
+我们能否让HashMap同步？
+
+HashMap可以通过下面的语句进行同步：
+Map m = Collections.synchronizeMap(hashMap);
+
+结论:<br>
+Hashtable 和 HashMap 有几个主要的不同：线程安全以及速度。仅在你需要完全的线程安全的时候使用Hashtable，而如果你使用Java 5或以上的话，请使用 ConcurrentHashMap 吧。
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

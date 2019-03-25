@@ -1,8 +1,10 @@
 ## Android 基础问题整理
 
+
 ### 简述 Android App 多渠道打包流程?
 待补充...
 
+<br>
 ### [Activity 启动模式介绍？](https://www.cnblogs.com/chenxibobo/p/6136626.html)
 
 **standard**
