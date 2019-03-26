@@ -6,11 +6,44 @@ xxx
 
 #### 如何比较两个字符串？使用“==”还是equals()方法？
 “==” 测试的是两个对象的引用是否相同；<br>
-equals()比较的是两个字符串的值是否相等。
-除非你想检查的是两个字符串是否是同一个对象，否则你应该使用equals()来比较字符串。
+equals()比较的是两个字符串的值是否相等。<br>
+除非你想检查的是两个字符串是否是同一个对象，否则你应该使用equals()来比较字符串。<br>
+
+#### [.equals() 和 == 区别？](https://www.jianshu.com/p/08445889bbb1)
+- 首先的区别是，equals() 是方法，而 == 是操作符；
+- 对于基本类型的变量来说（如 short、 int、 long、 float、 double），只能使用 == ，因为这些基本类型的变量没有 equals 方法。对于基本类型变量的比较，使用 == 比较， 一般比较的是它们的值。
+- 对于引用类型的变量来说（例如 String 类）才有 equals 方法，因为 String 继承了 Object 类， equals 是 Object 类的通用方法。对于该类型对象的比较，默认情况下，也就是没有复写 Object 类的 equals 方法，使用 == 和 equals 比较是一样效果的，都是比较的是它们在内存中的存放地址。
+- 对于 equals 方法被重写的情况, 以 String 类为例, String 类复写了 equals 方法，当使用 == 比较内存的存放地址不相等时，接下来会比较字符串的内容是否 相等，所以 String 类中的 equals 方法会比较两者的字符串内容是否一样。内容的比较。
+ 
+#### String、StringBuffer、StringBuilder
+String字符串常量，用于存放字符的数组被声明为final，因此只能赋值一次，不可再更改。<br>
+频繁使用 String 来操作字符串实际上是在不断地创建新的对象，这样会对系统的性能产生影响，适用于操作少量数据。<br>
+StringBuffer 字符串变量，适合于多线程操作下操作大量数据，线程安全的可变字符序列<br>
+StringBuilder 字符串变量，适合于单线程下操作大量数据，线程不安全的可变字符序列<br>
+String 对象的字符串拼接在编译时会转化成 StringBuilder 的 append 操作<br>
+运行速率   String < StringBuffer < StringBuilder<br>
+
+String s = new String(“111") 创造了几个对象？<br>
+
+会创造两个对象。Java为了避免产生大量的String对象，设计了一个字符串常量池。JDK6之前版本，常量池的内存在永久代进行分配，JDK7之后常量池的内存在Java堆中进行分配。创建一个字符串时，JVM首先检查字符串常量池中是否有相等的字符串，如果有则不再创建并返回该字符串的引用地址；如果没有则在字符串常量中创建字符串并返回该字符串的引用地址。<br>
+new 一个 String 对象时还会在堆内存中创建一个新的对象。<br>
+
+String为啥设计成不可变的？<br>
+
+用于存放字符的数组被声明为final，因此只能赋值一次，不可再更改，而且String 也没有对外暴露修改数组的方法。
+修改String时，不会在原有的内存地址修改，而是重新指向一个新对象。
+不可变性可以保证线程安全以及字符串串常量池的实现。
+
+可以重新赋值么？<br>
+可以通过反射的Field方法获取到当前对象的成员变量并重新赋值；<br>
+
 
 #### String 相关待整理...
 
+
+
+<br>
+<br>
 
 ### Java的强、软、弱、虚四种引用的区别?
 强引用：代码中普遍存在的，只要强引用还存在，垃圾收集器就不会回收掉被引用的对象。<br>
@@ -178,7 +211,7 @@ StringBuilder 是非线程安全的，StringBuffer 是线程安全的。<br>
 当需要对数据进行对此访问的情况下选用ArrayList；<br>当需要对数据进行多次增加删除修改时采用LinkedList。
 
 
-### HashMap 和 Hashtable 的区别
+### HashMap 和 Hashtable 的区别？
 > 原文链接： Javarevisited 翻译： [ImportNew.com - 唐小娟](http://www.importnew.com/author/tangxiaojuan)<br>
 译文链接： http://www.importnew.com/7010.html
 
@@ -188,7 +221,7 @@ HashMap和Hashtable的区别
 
 HashMap 和 Hashtable 都实现了 Map 接口，但决定用哪一个之前先要弄清楚它们之间的分别。主要的区别有：线程安全性，同步(synchronization)，以及速度。
 
-HashMap几乎可以等价于Hashtable，除了HashMap是非synchronized的，并可以接受null(HashMap可以接受为null的键值(key)和值(value)，而Hashtable则不行)。
+HashMap几乎可以等价于Hashtable，除了HashMap是非synchronized的，并可以接受null(HashMap可以接受为null的键值(key)和值(value)，而Hashtable既不支持 Null key 也不支持 Null value)。
 
 HashMap是非synchronized，而Hashtable是synchronized，这意味着Hashtable是线程安全的，多个线程可以共享一个Hashtable；而如果没有正确的同步的话，多个线程是不能共享HashMap的。Java 5提供了ConcurrentHashMap，它是HashTable的替代，比HashTable的扩展性更好。
 
@@ -267,6 +300,18 @@ Volatile 标记的变量不会被编译器优化；synchronized标记的变量�
 死锁检测  针对那些不可能实现按序加锁并且锁超时也不可行的场景<br>
 <br>
 
+### Java常见的编码方式
+ASCII码，GBK，UTF-8，UTF-16<br>
+UTF-8 中文占 3 个字节，英文占 1 个字节<br>
+UTF-16 中文占 4 个字节，英文占 4 个字节<br>
+
+
+### 基本数据类型的大小，以及封装类
+![image](./img/data.png)
+<br>
+
+
+
 ### Java 网络协议
 #### http 与 https 的区别
 类型  | 原理 | 功能 （数据加密）| 性能（安全性）|标准端口|CA证书|URL 开头
@@ -319,6 +364,96 @@ IP - 网络层 | 用来处理在网络上流动的数据包。数据包是网络
 
 [举一个例子:](https://blog.csdn.net/weixin_41907291/article/details/83821222 )
 > 我们用 HTTP 举例来说明，首先作为发送端的客户端在应用层（HTTP 协议）发出一个想看某个Web 页面的HTTP 请求。接着，为了传输方便，在传输层（TCP 协议）把从应用层处收到的数据（HTTP 请求报文）进行分割，并在各个报文上打上标记序号及端口号后转发给网络层。在网络层（IP 协议），增加作为通信目的地的 MAC 地址(media access control address 媒体通过控制地址,也称局域网地址,MAC地址用于在网络中唯一标示一个网卡，一台设备若有一或多个网卡，则每个网卡都需要并会有一个唯一的MAC地址。)后转发给链路层。这样一来，发往网络的通信请求就准备齐全了。接收端的服务器在链路层接收到数据，按序往上层发送，一直到应用层。当传输到应用层，才能算真正接收到由客户端发送过来的HTTP请求。
+
+<br>
+#### TCP 与 UDP 的区别？
+Tcp 面向连接，提供可靠的传输； UDP面向无连接，提供不可靠传输<br>
+Tcp 提供流量控制 ； UDP不提供流量控制<br>
+Tcp 保证传输数据顺序 ； UDP不保证传输顺序，也就是可能是乱序收包<br>
+TCP 面向字节流 ； UDP 面向数据包<br>
+补充：<br>
+TCP传输控制协议，一种传输层的通信协议<br>
+UDP用户数据报协议，一种传输层通信协议<br>
+TCP面向连接，UDP是无连接的<br>
+TCP提供可靠的服务，通过TCP传输的数据无差错，不丢失，不重复且按序到达；UDP不保证可靠交付<br>
+TCP面向字节流；UDP面向报文<br>
+TCP连接只能点对点；UDP支持一对一，一对多，多对一和多对多的通信<br>
+TCP首部开销20字节；UDP首部开销8字节<br>
+TCP的逻辑通道是全双工的可靠信道；UDP是不可靠信道<br>
+
+
+#### http1.0，http1.1和http2.0的区别？
+> 原文链接:http://blog.51cto.com/12118369/1962662
+
+##### HTTP1.0 HTTP 1.1 主要区别
+
+长连接<br>
+HTTP 1.0 需要使用keep-alive参数来告知服务器端要建立一个长连接，而HTTP1.1默认支持长连接。<br>
+HTTP是基于TCP/IP协议的，创建一个TCP连接是需要经过三次握手的,有一定的开销，如果每次通讯都要重新建立连接的话，对性能有影响。因此最好能维持一个长连接，可以用个长连接来发多个请求。<br>
+
+节约带宽<br>
+HTTP 1.1 支持只发送header信息(不带任何body信息)，如果服务器认为客户端有权限请求服务器，则返回100，否则返回401。客户端如果接受到100，才开始把请求body发送到服务器。<br>
+
+这样当服务器返回401的时候，客户端就可以不用发送请求body了，节约了带宽。<br>
+另外HTTP还支持传送内容的一部分。这样当客户端已经有一部分的资源后，只需要跟服务器请求另外的部分资源即可。这是支持文件断点续传的基础。<br>
+
+HOST域<br>
+现在可以web server例如tomat，设置虚拟站点是非常常见的，也即是说，web server上的多个虚拟站点可以共享同一个ip和端口。<br>
+
+HTTP1.0是没有host域的，HTTP1.1才支持这个参数。<br>
+
+##### HTTP1.1 HTTP 2.0主要区别
+
+多路复用<br>
+HTTP2.0 使用了多路复用的技术，做到同一个连接并发处理多个请求，而且并发请求的数量比HTTP1.1大了好几个数量级。<br>
+当然HTTP1.1也可以多建立几个TCP连接，来支持处理更多并发的请求，但是创建TCP连接本身也是有开销的。<br>
+TCP连接有一个预热和保护的过程，先检查数据是否传送成功，一旦成功过，则慢慢加大传输速度。因此对应瞬时并发的连接，服务器的响应就会变慢。所以最好能使用一个建立好的连接，并且这个连接可以支持瞬时并发的请求。<br>
+关于多路复用，可以参看学习NIO 。<br>
+
+数据压缩<br>
+HTTP1.1 不支持header数据的压缩，HTTP2.0使用HPACK算法对header的数据进行压缩，这样数据体积小了，在网络上传输就会更快。<br>
+
+服务器推送<br>
+意思是说，当我们对支持HTTP2.0的web server请求数据的时候，服务器会顺便把一些客户端需要的资源一起推送到客户端，免得客户端再次创建连接发送请求到服务器端获取。这种方式非常合适加载静态资源。<br>
+服务器端推送的这些资源其实存在客户端的某处地方，客户端直接从本地加载这些资源就可以了，不用走网络，速度自然是快很多的。<br>
+
+总结：
+- HTTP1.0 需要使用keep-alive参数来告知服务器端要建立一个长连接，而HTTP1.1默认支持长连接；
+- http1.1 支持只发送header，服务器返回100再发送请求 body，节省宽带流量；
+- http1.1 断点续传；
+- HTTP1.0 是没有host域的，HTTP1.1 才支持这个参数；（host 字段指定对应的虚拟站点）
+- HTTP2.0 使用了多路复用的技术，做到同一个连接并发处理多个请求，而且并发请求的数量比HTTP1.1大了好几个数量级；
+- HTTP1.1 不支持header数据的压缩，HTTP2.0 使用HPACK算法对header的数据进行压缩，这样数据体积小了，在网络上传输就会更快；
+- HTTP2.0 支持服务端推送
+
+
+
+
+
+### 浏览器输入地址到返回结果发生了什么？
+DNS域名解析<br>
+建立TCP连接<br>
+发送HTTP请求<br>
+服务器处理 HTTP 请求并返回响应报文<br>
+关闭TCP连接<br>
+浏览器解析HTML<br>
+浏览器渲染布局界面<br>
+
+### Get 和 Post 区别？
+Get 与 post 都是HTTP协议中两种发送请求的方法<br>
+Get 参数通过URL传递，post放在 Request body 中<br>
+Get 参数直接暴露在URL中，不能传递敏感信息，不安全<br>
+Get 对参数类型，长度，编码都有限制，post 没有<br>
+Get 产生一个TCP数据包，post产生两个TCP数据包<br>
+
+
+
+
+
+
+
+
+
 
 
 
